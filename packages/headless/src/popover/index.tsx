@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import * as React from 'react';
 import { useControllableState, useId, useClickOutside } from '@vertex-lab/hooks';
 import { createContext, mergeRefs } from '@vertex-lab/utilities';
@@ -38,19 +39,17 @@ export function Popover({ open: openProp, defaultOpen, onOpenChange, children }:
   );
 }
 
-export interface PopoverTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
+export type PopoverTriggerProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 export const PopoverTrigger = React.forwardRef<HTMLButtonElement, PopoverTriggerProps>(
   ({ onClick, ...props }, ref) => {
     const { open, onOpenChange, triggerId, contentId, triggerRef } = usePopoverContext('PopoverTrigger');
 
+    const combinedRef = mergeRefs(ref, triggerRef as React.Ref<HTMLButtonElement>);
+
     return (
       <button
-        ref={(node) => {
-          (triggerRef as React.MutableRefObject<HTMLElement | null>).current = node;
-          if (typeof ref === 'function') ref(node);
-          else if (ref) (ref as React.MutableRefObject<HTMLButtonElement | null>).current = node;
-        }}
+        ref={combinedRef as React.Ref<HTMLButtonElement>}
         type="button"
         id={triggerId}
         aria-haspopup="dialog"
@@ -69,7 +68,7 @@ export const PopoverTrigger = React.forwardRef<HTMLButtonElement, PopoverTrigger
 
 PopoverTrigger.displayName = 'PopoverTrigger';
 
-export interface PopoverContentProps extends React.HTMLAttributes<HTMLDivElement> {}
+export type PopoverContentProps = React.HTMLAttributes<HTMLDivElement>;
 
 export const PopoverContent = React.forwardRef<HTMLDivElement, PopoverContentProps>(
   ({ children, ...props }, ref) => {

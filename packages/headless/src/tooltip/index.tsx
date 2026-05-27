@@ -1,6 +1,7 @@
+/* eslint-disable react/prop-types */
 import * as React from 'react';
 import { useId } from '@vertex-lab/hooks';
-import { createContext } from '@vertex-lab/utilities';
+import { createContext, mergeRefs } from '@vertex-lab/utilities';
 import { Portal } from '@vertex-lab/primitives';
 
 interface TooltipContextValue {
@@ -54,21 +55,18 @@ export function Tooltip({ open: openProp, defaultOpen = false, delayDuration = 3
   );
 }
 
-export interface TooltipTriggerProps extends React.HTMLAttributes<HTMLElement> {
-  asChild?: boolean;
-}
-
-export const TooltipTrigger = React.forwardRef<HTMLButtonElement, React.ButtonHTMLAttributes<HTMLButtonElement>>(
+export const TooltipTrigger = React.forwardRef<
+  HTMLButtonElement,
+  React.ButtonHTMLAttributes<HTMLButtonElement>
+>(
   ({ onMouseEnter, onMouseLeave, onFocus, onBlur, ...props }, ref) => {
     const { onOpenChange, contentId, triggerRef } = useTooltipContext('TooltipTrigger');
 
+    const combinedRef = mergeRefs(ref, triggerRef as React.Ref<HTMLButtonElement>);
+
     return (
       <button
-        ref={(node) => {
-          (triggerRef as React.MutableRefObject<HTMLElement | null>).current = node;
-          if (typeof ref === 'function') ref(node);
-          else if (ref) (ref as React.MutableRefObject<HTMLButtonElement | null>).current = node;
-        }}
+        ref={combinedRef as React.Ref<HTMLButtonElement>}
         type="button"
         aria-describedby={contentId}
         onMouseEnter={(e) => {
@@ -95,7 +93,7 @@ export const TooltipTrigger = React.forwardRef<HTMLButtonElement, React.ButtonHT
 
 TooltipTrigger.displayName = 'TooltipTrigger';
 
-export interface TooltipContentProps extends React.HTMLAttributes<HTMLDivElement> {}
+export type TooltipContentProps = React.HTMLAttributes<HTMLDivElement>;
 
 export const TooltipContent = React.forwardRef<HTMLDivElement, TooltipContentProps>(
   ({ children, ...props }, ref) => {

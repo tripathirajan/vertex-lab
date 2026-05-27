@@ -11,8 +11,8 @@ describe('Semantic Tokens', () => {
   });
 
   it('every token has light and dark values', () => {
-    for (const [category, roles] of Object.entries(semanticColors)) {
-      for (const [role, pair] of Object.entries(roles)) {
+    for (const [, roles] of Object.entries(semanticColors)) {
+      for (const [, pair] of Object.entries(roles)) {
         expect(pair).toHaveProperty('light');
         expect(pair).toHaveProperty('dark');
         expect(typeof (pair as { light: string }).light).toBe('string');

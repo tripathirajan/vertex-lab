@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import * as React from 'react';
 import { useControllableState, useId } from '@vertex-lab/hooks';
 import { createContext } from '@vertex-lab/utilities';
@@ -42,7 +43,7 @@ export const Collapsible = React.forwardRef<HTMLDivElement, CollapsibleProps>(
 
 Collapsible.displayName = 'Collapsible';
 
-export interface CollapsibleTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {}
+export type CollapsibleTriggerProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 export const CollapsibleTrigger = React.forwardRef<HTMLButtonElement, CollapsibleTriggerProps>(
   ({ onClick, children, ...props }, ref) => {
@@ -70,7 +71,7 @@ export const CollapsibleTrigger = React.forwardRef<HTMLButtonElement, Collapsibl
 
 CollapsibleTrigger.displayName = 'CollapsibleTrigger';
 
-export interface CollapsibleContentProps extends React.HTMLAttributes<HTMLDivElement> {}
+export type CollapsibleContentProps = React.HTMLAttributes<HTMLDivElement>;
 
 export const CollapsibleContent = React.forwardRef<HTMLDivElement, CollapsibleContentProps>(
   ({ children, ...props }, ref) => {
