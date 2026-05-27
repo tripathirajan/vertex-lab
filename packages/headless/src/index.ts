@@ -3,3 +3,8 @@ export * from './accordion';
 export * from './switch';
 export * from './checkbox';
 export * from './dialog';
+export * from './collapsible';
+export * from './toggle';
+export * from './tooltip';
+export * from './popover';
+export * from './radio-group';
