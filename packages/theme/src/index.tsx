@@ -17,54 +17,62 @@ export interface ThemeProviderProps {
   children: React.ReactNode;
   defaultTheme?: Theme;
   storageKey?: string;
+  attribute?: string;
+}
+
+function getSystemTheme(): 'light' | 'dark' {
+  if (typeof window === 'undefined') return 'light';
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
 
 export function ThemeProvider({
   children,
   defaultTheme = 'system',
   storageKey = 'vertex-theme',
-  ...props
+  attribute = 'data-theme',
 }: ThemeProviderProps) {
-  const [theme, setTheme] = React.useState<Theme>(
+  const [theme, setThemeState] = React.useState<Theme>(
     () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
   );
 
-  const [resolvedTheme, setResolvedTheme] = React.useState<'light' | 'dark'>('light');
+  const [systemTheme, setSystemTheme] = React.useState<'light' | 'dark'>(getSystemTheme);
+
+  const resolvedTheme: 'light' | 'dark' = theme === 'system' ? systemTheme : theme;
 
   React.useEffect(() => {
-    const root = window.document.documentElement;
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const handler = (e: MediaQueryListEvent) => setSystemTheme(e.matches ? 'dark' : 'light');
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  }, []);
 
-    root.classList.remove('light', 'dark');
-
+  React.useEffect(() => {
+    const root = document.documentElement;
     if (theme === 'system') {
-      const systemTheme = window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light';
-
-      root.classList.add(systemTheme);
-      setResolvedTheme(systemTheme);
-      return;
+      root.removeAttribute(attribute);
+    } else {
+      root.setAttribute(attribute, theme);
     }
+  }, [theme, attribute]);
 
-    root.classList.add(theme);
-    setResolvedTheme(theme as 'light' | 'dark');
-  }, [theme]);
+  const setTheme = React.useCallback(
+    (t: Theme) => {
+      setThemeState(t);
+      localStorage.setItem(storageKey, t);
+    },
+    [storageKey]
+  );
 
   const value = React.useMemo(
-    () => ({
-      theme,
-      setTheme: (theme: Theme) => {
-        localStorage.setItem(storageKey, theme);
-        setTheme(theme);
-      },
-      resolvedTheme,
-    }),
-    [theme, resolvedTheme, storageKey]
+    () => ({ theme, resolvedTheme, setTheme }),
+    [theme, resolvedTheme, setTheme]
   );
 
   return (
-    <ThemeProviderContext value={value} {...props}>
+    <ThemeProviderContext value={value}>
       {children}
     </ThemeProviderContext>
   );
 }
+
+export * from './tokens';

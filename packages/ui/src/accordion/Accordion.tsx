@@ -1,13 +1,14 @@
 import * as React from 'react';
 import * as Headless from '@vertex-lab/headless';
 import { ChevronDown } from 'lucide-react';
+import { cn } from '../utils/cn';
 
 export const Accordion = React.forwardRef<HTMLDivElement, Headless.AccordionProps>(
   ({ className, ...props }, ref) => (
     <Headless.Accordion
       {...props}
       ref={ref}
-      className={`w-full border-y border-neutral-200 dark:border-neutral-800 ${className || ''}`}
+      className={cn('w-full border-y border-[var(--color-border-default)]', className)}
     />
   )
 );
@@ -18,7 +19,7 @@ export const AccordionItem = React.forwardRef<HTMLDivElement, Headless.Accordion
     <Headless.AccordionItem
       {...props}
       ref={ref}
-      className={`border-b border-neutral-200 dark:border-neutral-800 last:border-0 ${className || ''}`}
+      className={cn('border-b border-[var(--color-border-default)] last:border-0', className)}
     />
   )
 );
@@ -29,15 +30,15 @@ export const AccordionHeader = React.forwardRef<HTMLButtonElement, Headless.Acco
     <Headless.AccordionHeader
       {...props}
       ref={ref}
-      className={`
-        flex w-full items-center justify-between py-4 text-left font-medium transition-all
-        hover:text-primary-600 dark:hover:text-primary-400
-        [&[data-state=open]>svg]:rotate-180
-        ${className || ''}
-      `}
+      className={cn(
+        'flex w-full items-center justify-between py-4 text-left font-medium transition-all',
+        'text-[var(--color-text-default)] hover:text-[var(--color-text-interactive)]',
+        '[&[data-state=open]>svg]:rotate-180',
+        className
+      )}
     >
       {children}
-      <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200 text-neutral-500" />
+      <ChevronDown className="h-4 w-4 shrink-0 transition-transform duration-200 text-[var(--color-text-muted)]" />
     </Headless.AccordionHeader>
   )
 );
@@ -48,7 +49,7 @@ export const AccordionPanel = React.forwardRef<HTMLDivElement, Headless.Accordio
     <Headless.AccordionPanel
       {...props}
       ref={ref}
-      className={`overflow-hidden text-sm transition-all pb-4 ${className || ''}`}
+      className={cn('overflow-hidden text-sm transition-all pb-4', className)}
     >
       <div className="pt-0">{children}</div>
     </Headless.AccordionPanel>

@@ -16,7 +16,9 @@
     "@vertex-lab/hooks": "workspace:*",
     "@vertex-lab/primitives": "workspace:*",
     "@vertex-lab/headless": "workspace:*",
-    "lucide-react": "^0.546.0"
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.546.0",
+    "tailwind-merge": "^3.5.0"
   },
   "devDependencies": {
     "tsup": "^8.0.0",
