@@ -22,14 +22,14 @@ jobs:
 
       - uses: pnpm/action-setup@v4
         with:
-          version: 10
+          version: 9
 
       - uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: pnpm
 
-      - run: pnpm install --frozen-lockfile
+      - run: NPM_TOKEN="" pnpm install --frozen-lockfile
 
       - name: Build Storybook
         run: pnpm build-storybook
